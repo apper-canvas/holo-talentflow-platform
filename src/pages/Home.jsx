@@ -32,8 +32,13 @@ const Home = () => {
       name: 'Recruitment',
       icon: 'Users',
       color: 'from-orange-500 to-orange-600'
-    }
-,
+},
+{
+      id: 'employees',
+      name: 'Employee Directory',
+      icon: 'UserSearch',
+      color: 'from-teal-500 to-teal-600'
+    },
     {
       id: 'analytics',
       name: 'Analytics',

@@ -715,6 +715,11 @@ placeholder="Enter employee name"
             {renderAnalyticsDashboard()}
           </motion.div>
         )}
+{activeModule === 'employees' && (
+          <motion.div key="employees">
+            <EmployeeDirectory />
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   )
