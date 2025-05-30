@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import MainFeature from '../components/MainFeature'
 import ApperIcon from '../components/ApperIcon'
+import { toast } from 'react-toastify'
+import Chart from 'react-apexcharts'
 
 const Home = () => {
   const [activeModule, setActiveModule] = useState('dashboard')
