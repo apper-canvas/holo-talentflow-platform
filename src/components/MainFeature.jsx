@@ -4,6 +4,7 @@ import AnalyticsDashboard from './AnalyticsDashboard'
 import PayrollCalculator from './PayrollCalculator'
 import AttendanceTracker from './AttendanceTracker'
 import RecruitmentPipeline from './RecruitmentPipeline'
+import ActivitiesDashboard from './ActivitiesDashboard'
 import { useHRData } from '../hooks/useHRData'
 
 const MainFeature = ({ activeModule }) => {
@@ -63,6 +64,11 @@ const MainFeature = ({ activeModule }) => {
         {activeModule === 'employees' && (
           <motion.div key="employees">
             <EmployeeDirectory />
+          </motion.div>
+        )}
+{activeModule === 'activities' && (
+          <motion.div key="activities">
+            <ActivitiesDashboard />
           </motion.div>
         )}
       </AnimatePresence>

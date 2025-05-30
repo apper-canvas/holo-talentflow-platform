@@ -45,6 +45,13 @@ const Home = () => {
       icon: 'BarChart3',
       color: 'from-indigo-500 to-indigo-600'
     }
+,
+    {
+      id: 'activities',
+      name: 'Activities',
+      icon: 'Activity',
+      color: 'from-pink-500 to-pink-600'
+    }
   ]
 
   const quickStats = [
@@ -446,7 +453,10 @@ onClick={() => setActiveModule('employees')}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-surface-800">Recent Activities</h3>
-                  <button className="text-sm text-primary hover:text-primary-dark font-medium">
+<button 
+                    onClick={() => setActiveModule('activities')}
+                    className="text-sm text-primary hover:text-primary-dark font-medium"
+                  >
                     View All
                   </button>
                 </div>
