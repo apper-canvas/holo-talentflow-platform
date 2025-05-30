@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import ApperIcon from './ApperIcon'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns'
 import Chart from 'react-apexcharts'
+import EmployeeDirectory from './EmployeeDirectory'
 
 const MainFeature = ({ activeModule }) => {
   const [formData, setFormData] = useState({})
