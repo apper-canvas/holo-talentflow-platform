@@ -31,6 +31,13 @@ const Home = () => {
       icon: 'Users',
       color: 'from-orange-500 to-orange-600'
     }
+,
+    {
+      id: 'analytics',
+      name: 'Analytics',
+      icon: 'BarChart3',
+      color: 'from-indigo-500 to-indigo-600'
+    }
   ]
 
   const quickStats = [

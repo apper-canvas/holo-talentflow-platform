@@ -3,12 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'react-toastify'
 import ApperIcon from './ApperIcon'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns'
+import Chart from 'react-apexcharts'
 
 const MainFeature = ({ activeModule }) => {
   const [formData, setFormData] = useState({})
   const [currentDate, setCurrentDate] = useState(new Date())
   const [attendanceData, setAttendanceData] = useState([])
   const [candidates, setCandidates] = useState([])
+const [analyticsData, setAnalyticsData] = useState({})
+  const [reportFilters, setReportFilters] = useState({
+    dateRange: '30days',
+    department: 'all',
+    reportType: 'turnover'
+  })
 
   // Initialize demo data
   useEffect(() => {
@@ -16,6 +23,11 @@ const MainFeature = ({ activeModule }) => {
       generateDemoAttendance()
     } else if (activeModule === 'recruitment') {
       generateDemoCandidates()
+    }
+  }, [activeModule])
+useEffect(() => {
+    if (activeModule === 'analytics') {
+      generateDemoAnalytics()
     }
   }, [activeModule])
 
@@ -43,6 +55,33 @@ const MainFeature = ({ activeModule }) => {
       { id: 5, name: 'Vikram Singh', position: 'Full Stack Developer', status: 'rejected', stage: 'Final Round' }
     ]
     setCandidates(demoData)
+  }
+const generateDemoAnalytics = () => {
+    const analytics = {
+      keyMetrics: [
+        { label: 'Employee Turnover Rate', value: '8.2%', trend: 'down', change: '-2.1%' },
+        { label: 'Avg. Recruitment Time', value: '21 days', trend: 'down', change: '-5 days' },
+        { label: 'Average Salary', value: '₹8.5L', trend: 'up', change: '+12%' },
+        { label: 'Employee Satisfaction', value: '4.2/5', trend: 'up', change: '+0.3' }
+      ],
+      turnoverTrend: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        data: [12, 8, 6, 9, 7, 8]
+      },
+      departmentHeadcount: {
+        labels: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance'],
+        data: [120, 45, 32, 15, 35]
+      },
+      salaryDistribution: {
+        categories: ['0-3L', '3-6L', '6-10L', '10-15L', '15L+'],
+        data: [25, 85, 90, 35, 12]
+      },
+      recruitmentFunnel: {
+        labels: ['Applications', 'Screening', 'Interview', 'Offer', 'Hired'],
+        data: [450, 180, 95, 42, 28]
+      }
+    }
+    setAnalyticsData(analytics)
   }
 
   const handleInputChange = (field, value) => {
@@ -97,6 +136,30 @@ const MainFeature = ({ activeModule }) => {
     )
     toast.success('Candidate status updated successfully!')
   }
+const handleReportFilterChange = (field, value) => {
+    setReportFilters(prev => ({ ...prev, [field]: value }))
+  }
+
+  const generateCustomReport = () => {
+    toast.success(`Custom ${reportFilters.reportType} report generated for ${reportFilters.department} department (${reportFilters.dateRange})`)
+  }
+
+  const exportReport = (format) => {
+    toast.success(`Report exported as ${format.toUpperCase()}`)
+  }
+
+  const renderAnalyticsDashboard = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6"
+    >
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center">
+          <ApperIcon name="BarChart3" className="w-6 h-6 text-white" />
+        </div>
+        <h2 className="text-2xl font-bold text-surface-800">HR Analytics Dashboard</h2>
+      </div>
 
   const renderPayrollCalculator = () => (
     <motion.div
@@ -121,6 +184,43 @@ const MainFeature = ({ activeModule }) => {
               <input
                 type="text"
                 className="form-input"
+{/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {analyticsData.keyMetrics?.map((metric, index) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="glass-card rounded-2xl p-6"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold text-surface-600">{metric.label}</h3>
+              <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                metric.trend === 'up' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-red-100 text-red-800'
+              }`}>
+                {metric.change}
+              </span>
+            </div>
+            <div className="text-3xl font-bold text-surface-800 mb-1">{metric.value}</div>
+            <div className="flex items-center space-x-1">
+              <ApperIcon 
+                name={metric.trend === 'up' ? 'TrendingUp' : 'TrendingDown'} 
+                className={`w-4 h-4 ${
+                  metric.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                }`} 
+              />
+              <span className={`text-sm ${
+                metric.trend === 'up' ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {metric.trend === 'up' ? 'Improving' : 'Declining'}
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
                 placeholder="Enter employee name"
                 value={formData.employeeName || ''}
                 onChange={(e) => handleInputChange('employeeName', e.target.value)}
@@ -167,6 +267,82 @@ const MainFeature = ({ activeModule }) => {
         <div className="glass-card rounded-2xl p-6">
           <h3 className="text-lg font-semibold text-surface-800 mb-4">Salary Breakdown</h3>
           <div className="space-y-4">
+{/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Turnover Trend */}
+        <div className="glass-card rounded-2xl p-6">
+          <h3 className="text-lg font-semibold text-surface-800 mb-4">Employee Turnover Trend</h3>
+          {analyticsData.turnoverTrend && (
+            <Chart
+              options={{
+                chart: { toolbar: { show: false } },
+                colors: ['#2563eb'],
+                xaxis: { categories: analyticsData.turnoverTrend.categories },
+                yaxis: { title: { text: 'Turnover %' } },
+                stroke: { curve: 'smooth', width: 3 },
+                fill: { type: 'gradient' }
+              }}
+              series={[{ name: 'Turnover Rate', data: analyticsData.turnoverTrend.data }]}
+              type="area"
+              height={300}
+            />
+          )}
+        </div>
+
+        {/* Department Headcount */}
+        <div className="glass-card rounded-2xl p-6">
+          <h3 className="text-lg font-semibold text-surface-800 mb-4">Department-wise Headcount</h3>
+          {analyticsData.departmentHeadcount && (
+            <Chart
+              options={{
+                chart: { toolbar: { show: false } },
+                labels: analyticsData.departmentHeadcount.labels,
+                colors: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+                legend: { position: 'bottom' }
+              }}
+              series={analyticsData.departmentHeadcount.data}
+              type="donut"
+              height={300}
+            />
+          )}
+        </div>
+
+        {/* Salary Distribution */}
+        <div className="glass-card rounded-2xl p-6">
+          <h3 className="text-lg font-semibold text-surface-800 mb-4">Salary Distribution</h3>
+          {analyticsData.salaryDistribution && (
+            <Chart
+              options={{
+                chart: { toolbar: { show: false } },
+                colors: ['#6366f1'],
+                xaxis: { categories: analyticsData.salaryDistribution.categories },
+                yaxis: { title: { text: 'Number of Employees' } },
+                plotOptions: { bar: { borderRadius: 8 } }
+              }}
+              series={[{ name: 'Employees', data: analyticsData.salaryDistribution.data }]}
+              type="bar"
+              height={300}
+            />
+          )}
+        </div>
+
+        {/* Recruitment Funnel */}
+        <div className="glass-card rounded-2xl p-6">
+          <h3 className="text-lg font-semibold text-surface-800 mb-4">Recruitment Funnel</h3>
+          {analyticsData.recruitmentFunnel && (
+            <Chart
+              options={{
+                chart: { toolbar: { show: false } },
+                labels: analyticsData.recruitmentFunnel.labels,
+                colors: ['#f59e0b', '#10b981', '#2563eb', '#8b5cf6', '#ef4444']
+              }}
+              series={analyticsData.recruitmentFunnel.data}
+              type="funnel"
+              height={300}
+            />
+          )}
+        </div>
+      </div>
             {/* Earnings */}
             <div className="bg-green-50 border border-green-200 rounded-xl p-4">
               <h4 className="font-semibold text-green-800 mb-2">Earnings</h4>
@@ -233,6 +409,96 @@ const MainFeature = ({ activeModule }) => {
       <div className="flex items-center space-x-3 mb-6">
         <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
           <ApperIcon name="Clock" className="w-6 h-6 text-white" />
+{/* Custom Reports Section */}
+      <div className="glass-card rounded-2xl p-6">
+        <h3 className="text-lg font-semibold text-surface-800 mb-6">Custom Reports</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div>
+            <label className="form-label">Date Range</label>
+            <select
+              className="form-input"
+              value={reportFilters.dateRange}
+              onChange={(e) => handleReportFilterChange('dateRange', e.target.value)}
+            >
+              <option value="7days">Last 7 days</option>
+              <option value="30days">Last 30 days</option>
+              <option value="90days">Last 90 days</option>
+              <option value="1year">Last 1 year</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="form-label">Department</label>
+            <select
+              className="form-input"
+              value={reportFilters.department}
+              onChange={(e) => handleReportFilterChange('department', e.target.value)}
+            >
+              <option value="all">All Departments</option>
+              <option value="engineering">Engineering</option>
+              <option value="sales">Sales</option>
+              <option value="marketing">Marketing</option>
+              <option value="hr">HR</option>
+              <option value="finance">Finance</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="form-label">Report Type</label>
+            <select
+              className="form-input"
+              value={reportFilters.reportType}
+              onChange={(e) => handleReportFilterChange('reportType', e.target.value)}
+            >
+              <option value="turnover">Turnover Analysis</option>
+              <option value="attendance">Attendance Report</option>
+              <option value="recruitment">Recruitment Metrics</option>
+              <option value="performance">Performance Review</option>
+              <option value="salary">Salary Analysis</option>
+            </select>
+          </div>
+          
+          <div className="flex items-end">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={generateCustomReport}
+              className="btn-primary w-full"
+            >
+              Generate Report
+            </motion.button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => exportReport('pdf')}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-100 text-red-800 rounded-xl hover:bg-red-200 transition-colors"
+          >
+            <ApperIcon name="FileText" className="w-4 h-4" />
+            <span>Export PDF</span>
+          </button>
+          
+          <button
+            onClick={() => exportReport('excel')}
+            className="flex items-center space-x-2 px-4 py-2 bg-green-100 text-green-800 rounded-xl hover:bg-green-200 transition-colors"
+          >
+            <ApperIcon name="Download" className="w-4 h-4" />
+            <span>Export Excel</span>
+          </button>
+          
+          <button
+            onClick={() => exportReport('csv')}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-xl hover:bg-blue-200 transition-colors"
+          >
+            <ApperIcon name="Database" className="w-4 h-4" />
+            <span>Export CSV</span>
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  )
         </div>
         <h2 className="text-2xl font-bold text-surface-800">Attendance & Leave Management</h2>
       </div>
@@ -474,6 +740,11 @@ const MainFeature = ({ activeModule }) => {
         {activeModule === 'recruitment' && (
           <motion.div key="recruitment">
             {renderRecruitmentPipeline()}
+          </motion.div>
+        )}
+{activeModule === 'analytics' && (
+          <motion.div key="analytics">
+            {renderAnalyticsDashboard()}
           </motion.div>
         )}
       </AnimatePresence>
