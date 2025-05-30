@@ -122,7 +122,7 @@ const [searchTerm, setSearchTerm] = useState('')
   ]
 
   const quickActions = [
-    { label: 'Add Employee', icon: 'UserPlus', color: 'blue', action: () => setActiveModule('recruitment') },
+{ label: 'Add Employee', icon: 'UserPlus', color: 'blue', action: () => setActiveModule('employees') },
     { label: 'Process Payroll', icon: 'Calculator', color: 'green', action: () => setActiveModule('payroll') },
     { label: 'View Analytics', icon: 'BarChart3', color: 'purple', action: () => setActiveModule('analytics') },
     { label: 'Manage Leaves', icon: 'Calendar', color: 'orange', action: () => setActiveModule('attendance') },
