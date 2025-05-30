@@ -133,23 +133,6 @@ const Home = () => {
               ))}
             </div>
 
-            {/* Welcome Message */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-gradient-to-r from-primary to-accent rounded-2xl p-6 sm:p-8 text-white"
-            >
-              <h2 className="text-xl sm:text-2xl font-bold mb-2">Welcome to TalentFlow</h2>
-              <p className="text-sm sm:text-base text-white/90 mb-4">
-                Your comprehensive HR management solution designed for Indian IT companies
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-white/20 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">Payroll Management</span>
-                <span className="bg-white/20 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">Attendance Tracking</span>
-                <span className="bg-white/20 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">Recruitment</span>
-              </div>
-            </motion.div>
           </motion.div>
         )}
 
