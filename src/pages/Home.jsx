@@ -394,7 +394,7 @@ const [searchTerm, setSearchTerm] = useState('')
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-surface-800">Employee Directory</h3>
                   <button 
-                    onClick={() => setActiveModule('recruitment')}
+onClick={() => setActiveModule('employees')}
                     className="text-sm text-primary hover:text-primary-dark font-medium"
                   >
                     View All
